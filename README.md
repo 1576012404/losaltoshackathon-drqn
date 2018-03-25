@@ -1,6 +1,6 @@
 # Los Altos Hackathon - DRQN:
 
-NOTICE: The current build of the DRQN is NOT complete. For the CIG environment, the network gains a total reward of 0.0 across all 3,000,000 frames and seems to drift towards the far right corner of the map. Do NOT attempt to run this model until it is fixed.
+NOTICE: The current build of the DRQN is NOT complete. For the CIG environment, the network gains a total reward of 0.0 across all 3,000,000 frames and does not gain ANY reward whenever it successsfully kills an enemy. Do NOT attempt to run this model until it is fixed.
 
 A Deep Recurrent Q-Network designed for the 2018 Los Altos Hackathon. The Deep Recurrent Q-Network (DRQN) is designed to play in ViZDoom's CIG environment. The network has the following architechture:
 

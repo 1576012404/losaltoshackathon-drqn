@@ -90,7 +90,7 @@ def train(num_episodes, episode_length, scenario = "/Users/Lex/anaconda3/lib/pyt
     game.init()
 
     # Models
-    actionDRQN = DRQN_agent((256, 160, 3), game.gget_available_buttons_size(), 2, inital_learning_rate, "actionDRQN")
+    actionDRQN = DRQN_agent((160, 256, 3), game.gget_available_buttons_size() - 2, 2, inital_learning_rate, "actionDRQN")
 
     session = tf.Session()
 
@@ -101,13 +101,14 @@ def train(num_episodes, episode_length, scenario = "/Users/Lex/anaconda3/lib/pyt
 
     print("Testing.")
 
-    with tf.Session as sess:
+    with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())     # Initialize all tensorflow variables
-        for episode in num_episodes:
+        for episode in range(num_episodes):
             game.new_episode()
-            for frame in episode_length:
-                s = game.get_state().screen_buffer()
-                v = game.get_state().game_variables()
+            for frame in range(episode_length):
+                state = game.get_state()
+                s = state.screen_buffer
+                v = state.game_variables()
 
                 a = actionDRQN.prediction.eval(feed_dict = {actionDRQN.input: s})
                 action = actions[a]

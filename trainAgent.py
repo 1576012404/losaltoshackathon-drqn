@@ -18,7 +18,7 @@ import sys
 
 from DRQN import DRQN_agent, ExperienceReplay
 
-def train(num_episodes, episode_length, initial_learning_rate, scenario = "/Users/Lex/anaconda3/lib/python3.6/site-packages/vizdoom/scenarios/cig.cfg", map_path = 'map01', render = "False", print_bool = "True", delta_bool = "True"):
+def train(num_episodes, episode_length, initial_learning_rate, scenario = "/Users/Lex/anaconda3/lib/python3.6/site-packages/vizdoom/scenarios/cig.cfg", map_path = 'map02', render = "False", print_bool = "True", delta_bool = "True"):
     # Discount Parameter for Q-value Computation
     discount_factor = .99
 
@@ -106,8 +106,8 @@ def train(num_episodes, episode_length, initial_learning_rate, scenario = "/User
     game.init()
 
     # Models
-    actionDRQN = DRQN_agent((256, 160, 3), game.get_available_buttons_size(), 2, initial_learning_rate, "actionDRQN")
-    targetDRQN = DRQN_agent((256, 160, 3), game.get_available_buttons_size(), 2, initial_learning_rate, "targetDRQN", delta_bool = False)
+    actionDRQN = DRQN_agent((160, 256, 3), game.get_available_buttons_size() - 2, 2, initial_learning_rate, "actionDRQN")
+    targetDRQN = DRQN_agent((160, 256, 3), game.get_available_buttons_size() - 2, 2, initial_learning_rate, "targetDRQN", delta_bool = False)
     experiences = ExperienceReplay(1000)
 
     # Storage for models
@@ -116,14 +116,15 @@ def train(num_episodes, episode_length, initial_learning_rate, scenario = "/User
     print("Training.")
     start_time = timeit.default_timer()
 
-    with tf.Session as sess:
+    with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())     # Initialize all tensorflow variables
-        for episode in num_episodes:
+        for episode in range(num_episodes):
             game.new_episode()
-            for frame in episode_length:
-                s = game.get_state().screen_buffer()
+            for frame in range(episode_length):
+                state = game.get_state()
+                s = state.screen_buffer
 
-                a = actionDRQN.prediction.eval(feed_dict = {actionDRQN.input: s})
+                a = actionDRQN.prediction.eval(feed_dict = {actionDRQN.input: s})[0]
                 action = actions[a]
 
                 reward = game.make_action(action)
@@ -136,12 +137,12 @@ def train(num_episodes, episode_length, initial_learning_rate, scenario = "/User
                     break
 
                 if (frame % store_frequency) == 0:
-                    experiences.appendToBuffer(s, action, reward)
+                    experiences.appendToBuffer((s, action, reward))
 
                 if (frame % update_frequency) == 0:
                     memory = experiences.sample(1)
-                    mem_frame = memory[0]
-                    mem_reward = memory[2]
+                    mem_frame = memory[0][0]
+                    mem_reward = memory[0][2]
 
                     Q1 = actionDRQN.output.eval(feed_dict = {actionDRQN.input: mem_frame})
                     Q2 = targetDRQN.output.eval(feed_dict = {targetDRQN.input: mem_frame})
@@ -156,11 +157,11 @@ def train(num_episodes, episode_length, initial_learning_rate, scenario = "/User
                     total_loss += loss
 
                     # Update both networks
-                    actionDRQN.update_function.run(feed_dict = {actionDRQN.target_vector: Qtarget, actionDRQN.input: mem_frame})
-                    targetDRQN.update_function.run(feed_dict = {targetDRQN.target_vector: Qtarget, targetDRQN.input: mem_frame})
+                    actionDRQN.update.run(feed_dict = {actionDRQN.target_vector: Qtarget, actionDRQN.input: mem_frame})
+                    targetDRQN.update.run(feed_dict = {targetDRQN.target_vector: Qtarget, targetDRQN.input: mem_frame})
 
-            reward.append(episode, total_reward)
-            loss.append(episode, total_loss)
+            rewards.append((episode, total_reward))
+            losses.append((episode, total_loss))
 
             if (episode % print_frequency) == 0:
                 print("At Episode %d, Reward = %.3f and Loss = %.3f." % (episode, total_reward, total_loss))
@@ -195,4 +196,4 @@ def train(num_episodes, episode_length, initial_learning_rate, scenario = "/User
                 g.close()
 
 if __name__ == '__main__':
-    train(num_episodes = 10000, episode_length = 100, initial_learning_rate = 0.01, render = True, delta_bool = False)
+    train(num_episodes = 10000, episode_length = 300, initial_learning_rate = 0.01, render = False, delta_bool = False)

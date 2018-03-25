@@ -139,12 +139,12 @@ class DRQN_agent():
         self.pool1 = tf.nn.max_pool(self.relu1, ksize = [1, self.poolsize, self.poolsize, 1], strides = [1, self.stride, self.stride, 1], padding = "SAME", name = name + ".pool1")
 
         # Second Convolutional Unit
-        self.conv2 = tf.nn.conv2d(input = self.conv1, filter = self.features2, strides = [1, self.stride, self.stride, 1], padding = "VALID", name = name + ".conv2")
+        self.conv2 = tf.nn.conv2d(input = self.pool1, filter = self.features2, strides = [1, self.stride, self.stride, 1], padding = "VALID", name = name + ".conv2")
         self.relu2 = tf.nn.relu(self.conv2, name = name + ".relu2")
         self.pool2 = tf.nn.max_pool(self.relu2, ksize = [1, self.poolsize, self.poolsize, 1], strides = [1, self.stride, self.stride, 1], padding = "SAME", name = name + ".pool2")
 
         # Third Convolutional Unit
-        self.conv3 = tf.nn.conv2d(input = self.conv2, filter = self.features3, strides = [1, self.stride, self.stride, 1], padding = "VALID", name = name + ".conv3")
+        self.conv3 = tf.nn.conv2d(input = self.pool2, filter = self.features3, strides = [1, self.stride, self.stride, 1], padding = "VALID", name = name + ".conv3")
         self.relu3 = tf.nn.relu(self.conv3, name = name + ".relu3")
         self.pool3 = tf.nn.max_pool(self.relu3, ksize = [1, self.poolsize, self.poolsize, 1], strides = [1, self.stride, self.stride, 1], padding = "SAME", name = name + ".pool3")
 
@@ -154,7 +154,7 @@ class DRQN_agent():
 
         # Delta Variable Computation
         if delta_bool:
-            self.dv1 = tf.nn.relu(tf.matmul(self.reshaped_input, self.dW1) + self.db, name = name + ".dv1")
+            self.dv1 = tf.nn.relu(tf.matmul(self.reshaped_input, self.dW1) + self.db1, name = name + ".dv1")
             self.dv2 = tf.tanh(tf.matmul(self.dv1, self.dW2) + self.db2, name = name + ".dv2")
             self.dv = 90 * tf.reshape(self.dv2, [-1], name = name + ".dv")    # Converts dv2 into a vector of values in the range [-90, 90]
 
@@ -172,8 +172,8 @@ class DRQN_agent():
         # Back-Propagation
         self.loss = tf.reduce_mean(tf.square(self.target_vector - self.output), name = name + ".loss")
         self.optimizer = tf.train.AdamOptimizer(self.learning_rate, name = name + ".AdamOptimizer")
-        self.gradients = self.optimizer.compute_gradients(self.loss, name = name + ".gradients")
-        self.update = self.optimizer.apply_gradients(self.gradients, name = name + ".update")
+        self.gradients = self.optimizer.compute_gradients(self.loss)
+        self.update = self.optimizer.apply_gradients(self.gradients)
 
         self.parameters = (self.features1, self.features2, self.features3,
                            self.rW, self.rU, self.rV, self.rb, self.rc,

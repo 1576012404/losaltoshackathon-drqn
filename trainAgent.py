@@ -17,7 +17,7 @@ import sys
 
 from DRQN import DRQN_agent, ExperienceReplay
 
-def train(num_episodes, episode_length, initial_learning_rate, scenario = "/Users/Lex/anaconda3/lib/python3.6/site-packages/vizdoom/scenarios/cig.cfg", map_path = 'map02', render = "False", print_bool = "True", delta_bool = "True"):
+def train(num_episodes, episode_length, initial_learning_rate, model_number = 1, scenario = "/Users/Lex/anaconda3/lib/python3.6/site-packages/vizdoom/scenarios/cig.cfg", map_path = 'map02', render = False, print_bool = True, delta_bool = True, record_model = True):
     # Discount Parameter for Q-value Computation
     discount_factor = .99
 
@@ -177,10 +177,10 @@ def train(num_episodes, episode_length, initial_learning_rate, scenario = "/User
         print("Recording model reward and loss.")
 
         if record_model:
-            sp = saver.save(sess, 'DRQN_best_params.ckpt')
+            sp = saver.save(sess, 'Models/DRQN_best_params.ckpt', global_step = model_number)
             print("DRQN model stored at %s" % sp)
 
-            with open('DRQN_rewards_and_losses.txt', 'a+') as g:
+            with open('DRQN_rewards_and_losses-' + str(model_number) + '.txt', 'a+') as g:
                 g.write("Rewards (Step, Reward):\n")
                 for r in rewards:
                     g.write("(" + str(r[0]) + ", " + str(r[1]) + ")\n")
@@ -195,4 +195,4 @@ def train(num_episodes, episode_length, initial_learning_rate, scenario = "/User
                 g.close()
 
 if __name__ == '__main__':
-    train(num_episodes = 10000, episode_length = 300, initial_learning_rate = 0.01, render = False, delta_bool = False)
+    train(num_episodes = 10000, episode_length = 300, model_number = 1, initial_learning_rate = 0.01, render = False, delta_bool = False)

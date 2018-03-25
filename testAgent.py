@@ -17,7 +17,7 @@ import sys
 
 from DRQN import DRQN_agent, ExperienceReplay
 
-def train(num_episodes, episode_length, scenario = "/Users/Lex/anaconda3/lib/python3.6/site-packages/vizdoom/scenarios/cig.cfg", map_path = 'map01', render = "False", print_bool = "True", delta_bool = "True"):
+def test(num_episodes, episode_length, meta_path, checkpoint, scenario = "/Users/Lex/anaconda3/lib/python3.6/site-packages/vizdoom/scenarios/cig.cfg", map_path = 'map02', render = False, print_bool = True, delta_bool = True):
     # Totals
     total_reward = 0
     total_kills = 0
@@ -89,7 +89,7 @@ def train(num_episodes, episode_length, scenario = "/Users/Lex/anaconda3/lib/pyt
     game.init()
 
     # Models
-    actionDRQN = DRQN_agent((160, 256, 3), game.gget_available_buttons_size() - 2, 2, inital_learning_rate, "actionDRQN")
+    actionDRQN = DRQN_agent((160, 256, 3), game.get_available_buttons_size() - 2, 2, 0.01, "actionDRQN")
 
     session = tf.Session()
 
@@ -107,9 +107,9 @@ def train(num_episodes, episode_length, scenario = "/Users/Lex/anaconda3/lib/pyt
             for frame in range(episode_length):
                 state = game.get_state()
                 s = state.screen_buffer
-                v = state.game_variables()
+                v = state.game_variables
 
-                a = actionDRQN.prediction.eval(feed_dict = {actionDRQN.input: s})
+                a = actionDRQN.prediction.eval(feed_dict = {actionDRQN.input: s})[0]
                 action = actions[a]
 
                 reward = game.make_action(action)
@@ -121,9 +121,9 @@ def train(num_episodes, episode_length, scenario = "/Users/Lex/anaconda3/lib/pyt
                 if game.is_episode_finished():
                     break
 
-                total_kills += v[2][0]
+                total_kills += v[2]
 
-            print("At Episode %d, Reward = %.3f and Loss = %.3f." % (episode, total_reward, total_loss))
+            print("At Episode %d, Reward = %.3f and Killcount = %.3f." % (episode, total_reward, total_kills))
 
             sum_reward += total_reward
             sum_kills += total_kills
@@ -134,4 +134,4 @@ def train(num_episodes, episode_length, scenario = "/Users/Lex/anaconda3/lib/pyt
         print("Testing complete with total reward of %.3f and total killcount of %.3f" % (sum_reward, sum_kills))
 
 if __name__ == '__main__':
-    test(num_episodes = 10, episode_length = 500, render = True, delta_bool = False)
+    test(num_episodes = 10, episode_length = 500, meta_path = "Models/DRQN_best_params.ckpt-1.meta", checkpoint = "Models/", render = True, delta_bool = False)

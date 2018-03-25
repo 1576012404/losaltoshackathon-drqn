@@ -20,10 +20,10 @@ from DRQN import DRQN_agent, ExperienceReplay
 def test(num_episodes, episode_length, meta_path, checkpoint, scenario = "/Users/Lex/anaconda3/lib/python3.6/site-packages/vizdoom/scenarios/cig.cfg", map_path = 'map02', render = False, print_bool = True, delta_bool = True):
     # Totals
     total_reward = 0
-    total_kills = 0
+    #total_kills = 0
 
     sum_reward = 0
-    sum_kills = 0
+    #sum_kills = 0
 
     # ViZDoom Setup
     game = DoomGame()
@@ -107,7 +107,7 @@ def test(num_episodes, episode_length, meta_path, checkpoint, scenario = "/Users
             for frame in range(episode_length):
                 state = game.get_state()
                 s = state.screen_buffer
-                v = state.game_variables
+                #v = state.game_variables
 
                 a = actionDRQN.prediction.eval(feed_dict = {actionDRQN.input: s})[0]
                 action = actions[a]
@@ -121,17 +121,17 @@ def test(num_episodes, episode_length, meta_path, checkpoint, scenario = "/Users
                 if game.is_episode_finished():
                     break
 
-                total_kills += v[2]
+                #total_kills += v[2]
 
-            print("At Episode %d, Reward = %.3f and Killcount = %.3f." % (episode, total_reward, total_kills))
+            print("At Episode %d, Reward = %.3f and Killcount = %.3f." % (episode, total_reward)#, total_kills))
 
             sum_reward += total_reward
-            sum_kills += total_kills
+            #sum_kills += total_kills
 
             total_reward = 0
-            total_kills = 0
+            #total_kills = 0
 
-        print("Testing complete with total reward of %.3f and total killcount of %.3f" % (sum_reward, sum_kills))
+        print("Testing complete with total reward of %.3f" % (sum_reward))
 
 if __name__ == '__main__':
     test(num_episodes = 10, episode_length = 500, meta_path = "Models/DRQN_best_params.ckpt-1.meta", checkpoint = "Models/", render = True, delta_bool = False)

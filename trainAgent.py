@@ -1,14 +1,13 @@
 # Los Altos Hackathon 2018.
 # The following code describes the training of a Deep Recurrent Q-Network within an environment with partial observability.
 # The environment used to train this is CIG scenario from the ViZDoom API.
-# The network is trained over 10,000 episodes with 100 frame episodes, for a total of 1,000,000 frames.
+# The network is trained over 10,000 episodes with 300 frame episodes, for a total of 3,000,000 frames.
 # The network is updated every five frames.
 
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-import gym
 from vizdoom import *
 
 import timeit

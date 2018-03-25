@@ -1,14 +1,13 @@
 # Los Altos Hackathon 2018.
 # The following code describes the testing of a Deep Recurrent Q-Network within an environment with partial observability.
 # The environment used to test this is CIG scenario from the ViZDoom API.
-# The network is tested over 20 episodes with 100 frame episodes, for a total of 2,000 frames.
+# The network is tested over 10 episodes with 500 frame episodes, for a total of 5,000 frames.
 # The network is NOT updated.
 
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-import gym
 from vizdoom import *
 
 import timeit
@@ -135,4 +134,4 @@ def train(num_episodes, episode_length, scenario = "/Users/Lex/anaconda3/lib/pyt
         print("Testing complete with total reward of %.3f and total killcount of %.3f" % (sum_reward, sum_kills))
 
 if __name__ == '__main__':
-    test(num_episodes = 15, episode_length = 100, render = True, delta_bool = False)
+    test(num_episodes = 10, episode_length = 500, render = True, delta_bool = False)

@@ -11,7 +11,7 @@ A Deep Recurrent Q-Network designed for the 2018 Los Altos Hackathon. The Deep R
 
 The optimization algorithm used is the ADAM optimizer. The network was trained for 10000 episodes, each episode representing either 300 frames or the amount of frames until the network dies.
 
-The DRQN is capable of storing its final parameters for later use in a file called `DRQN_best_params.ckpt`. As well, the DRQN outputs a text file containing a list of all its reward values and loss values collected throughout training.
+The DRQN is capable of storing its final parameters for later use in a file called `Models/DRQN_best_params.ckpt-[model number].[file_extension]`. As well, the DRQN outputs a text file containing a list of all its reward values and loss values collected throughout training.
 
 # Prerequisites:
 * Python v3.6.4
@@ -26,8 +26,8 @@ The DRQN is capable of storing its final parameters for later use in a file call
 
 # Installation:
 To install the repository, run `git clone https://github.com/Luthanicus/losaltoshackathon-drqn.git` in a terminal window.
-To train the network, run `trainAgent.py` or use the predefined model `DRQN_best_params.ckpt`.
-To test the network, run `testAgent.py` using the `DRQN_best_params.ckpt` model.
+To train the network, run `trainAgent.py` or use a predefined model in the `Models/` folder.
+To test the network, run `testAgent.py` using the `Models/DRQN_best_params.ckpt-[model number].[file_extension]`` model.
 
 # Built With:
 * [Python](https://www.python.org/)

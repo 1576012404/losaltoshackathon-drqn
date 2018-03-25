@@ -27,7 +27,7 @@ The DRQN is capable of storing its final parameters for later use in a file call
 # Installation:
 To install the repository, run `git clone https://github.com/Luthanicus/losaltoshackathon-drqn.git` in a terminal window.
 To train the network, run `trainAgent.py` or use a predefined model in the `Models/` folder.
-To test the network, run `testAgent.py` using the `Models/DRQN_best_params.ckpt-[model number].[file_extension]`` model.
+To test the network, run `testAgent.py` using the `Models/DRQN_best_params.ckpt-[model number].[file_extension]` model.
 
 # Built With:
 * [Python](https://www.python.org/)

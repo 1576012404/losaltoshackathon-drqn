@@ -35,3 +35,6 @@ To test the network, run `testAgent.py` using the `DRQN_best_params.ckpt` model.
 * [Tensorflow](https://www.tensorflow.org/)
 
 * [ViZDoom](http://vizdoom.cs.put.edu.pl/)
+
+# Author:
+Alexander McDowell. Code written at the 2018 Los Altos Hackathon.

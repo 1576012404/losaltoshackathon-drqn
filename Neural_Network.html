@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type = "text/css" src = "Neural_Network.css"></style>
+    <script src="math.js" type="text/javascript"></script>
+    <script data-main = "Neural_Network.js" src = "require.js"></script>
+    <script type = "text/javascript" src = "Neural_Network.js"></script>
+  </head>
+  <body>
+    <h1> Basic Two-Layer Feed-Forward Neural Network in Javascript </h1>
+    <canvas id = "data"></canvas>
+    <button name = "data_button" onclick = "getData(500, draw = true);">Create Data</button>
+    <button name = "train_button" onclick = "train(1000);">Train Network</button>
+    <button name = "decision_button"onclick = "draw_decision_boundary();">Compute Decision Boundary</button>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-# LosAltosHackathon-DRQN
+# Los Altos Hackathon - DRQN
 A Deep Recurrent Q-Network designed for the 2018 Los Altos Hackathon. The Deep Recurrent Q-Network (DRQN) is designed to play in ViZDoom's CIG environment. The network has the following architechture:
 
 1. Single Frame Input
